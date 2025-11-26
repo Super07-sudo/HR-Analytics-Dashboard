@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR Analytics Dashboard — Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #00b894, #00e0b0, #3f51b5, #8e24aa);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .bg-circles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .bg-circles span {
+      position: absolute;
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: floatUp 12s linear infinite;
+      bottom: -150px;
+    }
+
+    .bg-circles span:nth-child(1) { left: 25%; width: 60px; height: 60px; animation-delay: 0s; }
+    .bg-circles span:nth-child(2) { left: 10%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 8s; }
+    .bg-circles span:nth-child(3) { left: 70%; width: 100px; height: 100px; animation-delay: 4s; }
+    .bg-circles span:nth-child(4) { left: 40%; width: 40px; height: 40px; animation-delay: 6s; animation-duration: 10s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      padding: 40px 50px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      text-align: center;
+      color: #fff;
+      width: 350px;
+      animation: slideIn 1s ease;
+    }
+
+    .login-container h2 {
+      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .login-container p {
+      font-size: 14px;
+      color: #e0e0e0;
+      margin-bottom: 25px;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .login-container input::placeholder {
+      color: #ddd;
+    }
+
+    .login-container button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00e0b0, #00b894);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-container button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 224, 176, 0.5);
+    }
+
+    .forgot-link {
+      display: block;
+      margin-top: 10px;
+      color: #d0d0d0;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .login-footer {
+      margin-top: 20px;
+      color: #ccc;
+      font-size: 13px;
+    }
+
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 5px solid #00b894;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-circles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="login-container">
+    <h2>HR Analytics Dashboard</h2>
+    <p>Welcome back! Please log in to continue.</p>
+
+    <input type="text" id="username" placeholder="Enter username" />
+    <input type="password" id="password" placeholder="Enter password" />
+    <button onclick="login()">Login</button>
+    <span class="forgot-link" onclick="window.location.href='register.html'">New here? Register now</span>
+
+    <div class="login-footer">© 2025 D.Y. Patil College of Engineering & Tech</div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="checkmark"></div>
+  </div>
+
+  <script>
+    // === LOGIN LOGIC (supports registered users) ===
+    function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (user === "" || pass === "") {
+        alert("⚠️ Please enter both username and password!");
+        return;
+      }
+
+      const demoUsers = [
+        { username: "admin", password: "admin123", role: "admin" },
+        { username: "hr", password: "hr123", role: "hr" }
+      ];
+
+      const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
+      const allUsers = [...demoUsers, ...registeredUsers];
+
+      const found = allUsers.find(u => u.username === user && u.password === pass);
+
+      if (found) {
+        localStorage.setItem("loggedInUser", user);
+        localStorage.setItem("userRole", found.role);
+
+        document.getElementById('loader').style.display = "flex";
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1500);
+      } else {
+        alert("❌ Invalid username or password!");
+      }
+    }
+
+    document.addEventListener("keypress", e => {
+      if (e.key === "Enter") login();
+    });
+  </script>
+</body>
+</html>

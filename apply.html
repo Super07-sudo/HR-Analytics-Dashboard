@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application - HR Analytics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light">
+  <header>
+    <h1>📝 Job Application Form</h1>
+  </header>
+
+  <div class="form">
+    <h2>Apply for a Job</h2>
+
+    <input id="app_name" placeholder="Full Name" />
+    <input id="app_email" type="email" placeholder="Email" />
+    <input id="app_mobile" type="tel" placeholder="Mobile Number" />
+    <input id="app_department" placeholder="Desired Department" />
+    <input id="app_salary" type="number" placeholder="Expected Salary" />
+    <button onclick="submitApplication()">Submit Application</button>
+    <p id="appMsg" style="color: teal; font-weight: bold;"></p>
+  </div>
+
+  <script>
+    // Save application data offline
+    function submitApplication() {
+      const app = {
+        name: getVal("app_name"),
+        email: getVal("app_email"),
+        mobile: getVal("app_mobile"),
+        department: getVal("app_department"),
+        salary: parseInt(getVal("app_salary")),
+        status: "Pending"
+      };
+
+      if (!app.name || !app.email) return alert("Please fill all fields!");
+      const applications = JSON.parse(localStorage.getItem("applications")) || [];
+      applications.push(app);
+      localStorage.setItem("applications", JSON.stringify(applications));
+
+      document.getElementById("appMsg").textContent = "✅ Application submitted successfully!";
+      clearInputs();
+    }
+
+    function getVal(id) { return document.getElementById(id).value.trim(); }
+    function clearInputs() {
+      document.querySelectorAll("input").forEach(i => i.value = "");
+    }
+  </script>
+</body>
+</html>

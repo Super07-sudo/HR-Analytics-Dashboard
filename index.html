@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR Analytics Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>HR Analytics Dashboard</h2>
+    <nav>
+      <a class="active" onclick="showTab('dashboard')">🏠 Dashboard</a>
+      <a onclick="showTab('employees')">👥 Add Employee</a>
+      <a onclick="showTab('employeeList')">📋 Employee List</a>
+      <a onclick="showTab('applications')">🧾 Applications</a>
+      <a onclick="showTab('meetings')">📅 Meetings</a>
+      <a onclick="showTab('training')">📘 Training</a>
+      <a onclick="showTab('performance')">📊 Performance</a>
+      <a onclick="showTab('feedback')">💬 Feedback</a>
+      <a onclick="showTab('settings')">⚙️ Settings</a>
+    </nav>
+  </aside>
+
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Header -->
+    <header>
+      <div class="header-left">
+        <h1>Welcome, <span id="welcomeUser">Boss</span></h1>
+        <p id="liveClock" class="clock"></p>
+      </div>
+
+      <div class="header-right">
+        <div class="notification-wrapper">
+          <button id="bell" onclick="toggleNotifications()">🔔</button>
+          <span id="notifBadge" class="badge hidden">0</span>
+        </div>
+
+        <div class="profile-container" onclick="toggleProfileCard()">
+          <img id="profileIcon" src="assets/user_icon.png" class="profile-icon" alt="Profile" />
+        </div>
+
+        <div id="profileCard" class="profile-card hidden">
+          <label for="profileUpload">
+            <img id="profileAvatar" src="assets/user_icon.png" class="profile-avatar" alt="User Avatar" />
+          </label>
+
+          <input type="file" id="profileUpload" class="hidden" accept="image/*" onchange="updateProfileImage(event)" />
+
+          <input type="text" id="profileName" placeholder="Your Name" />
+          <input type="text" id="profileRole" placeholder="Profession" />
+          <input type="text" id="profileEmail" placeholder="Email" disabled />
+
+          <button onclick="saveProfile()" class="save-btn">Save</button>
+          <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </header>
+
+
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="tab">
+      <h2>📊 HR Analytics Overview</h2>
+
+      <!-- Stats Cards -->
+      <div class="cards">
+        <div class="card"><h3>👥 Total Employees</h3><p id="totalEmployees">0</p></div>
+        <div class="card"><h3>💰 Average Salary</h3><p id="avgSalary">₹0</p></div>
+        <div class="card"><h3>❌ Attrition Rate</h3><p id="attritionRate">0%</p></div>
+        <div class="card"><h3>😊 Job Satisfaction</h3><p id="satisfactionRate">0</p></div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Employees by Department</h3>
+          <canvas id="deptChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Gender Distribution</h3>
+          <canvas id="genderChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Average Salary by Department</h3>
+          <canvas id="salaryChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Employee Satisfaction Trend</h3>
+          <canvas id="satisfactionChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ADD EMPLOYEE -->
+    <section id="employees" class="tab hidden">
+      <h2>Add New Employee</h2>
+      <div class="form">
+        <input id="name" placeholder="Name">
+        <input id="department" placeholder="Department">
+        <input id="gender" placeholder="Gender">
+        <input id="monthly_income" type="number" placeholder="Monthly Income">
+        <button onclick="addEmployee()">Add Employee</button>
+      </div>
+    </section>
+
+
+
+    <!-- Employee List -->
+<section id="employeeList" class="tab hidden">
+  <h2>Employee List</h2>
+
+  <table id="employeeListTable" border="1" cellspacing="0" cellpadding="8">
+    <tr>
+      <th>Name</th>
+      <th>Department</th>
+      <th>Gender</th>
+      <th>Income</th>
+      <th>Years</th>
+      <th>Satisfaction</th>
+    </tr>
+  </table>
+</section>
+
+
+
+    <!-- APPLICATIONS -->
+    <section id="applications" class="tab hidden">
+      <h2>Job Applications</h2>
+      <table id="applicationsTable" border="1" cellspacing="0" cellpadding="8"></table>
+    </section>
+
+
+
+    <!-- MEETINGS -->
+<section id="meetings" class="tab hidden">
+  <h2>📅 Meetings</h2>
+
+  <div class="meeting-form">
+    <input id="meetName" placeholder="Employee Name">
+    <input id="meetTopic" placeholder="Meeting Topic">
+    <input id="meetDate" type="date">
+    <input id="meetTime" type="time">
+    <input id="meetLink" placeholder="Meeting Link (Optional)">
+    <button onclick="addMeeting()">➕ Add Meeting</button>
+  </div>
+
+  <table id="meetingsTable" class="meeting-table" cellpadding="10">
+    <tr>
+      <th>Employee</th>
+      <th>Topic</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </table>
+</section>
+
+
+
+    <!-- TRAINING -->
+<section id="training" class="tab hidden">
+  <h2>Employee Training</h2>
+
+  <div class="form">
+    <input id="trainingTitle" placeholder="Training Title">
+    <input id="trainerName" placeholder="Trainer Name">
+    <input id="trainingDate" type="date">
+    <button onclick="addTraining()">Add Training</button>
+  </div>
+
+  <table id="trainingTable" border="1" cellspacing="0" cellpadding="8"></table>
+</section>
+
+
+
+<!-- PERFORMANCE -->
+<section id="performance" class="tab hidden">
+  <h2>Performance Analytics</h2>
+
+  <div class="filter-controls">
+    <label><b>Select Period:</b></label>
+    <select id="performancePeriod" onchange="updatePerformanceChart()">
+      <option value="daily">Daily</option>
+      <option value="monthly" selected>Monthly</option>
+      <option value="yearly">Yearly</option>
+    </select>
+  </div>
+
+  <canvas id="performanceChart"></canvas>
+</section>
+
+
+
+<!-- FEEDBACK -->
+<section id="feedback" class="tab hidden">
+  <h2>Employee Feedback</h2>
+  <div class="form">
+    <textarea id="feedbackText" placeholder="Write your feedback..." rows="3"></textarea>
+    <button onclick="addFeedback()">Submit Feedback</button>
+  </div>
+  <ul id="feedbackList"></ul>
+</section>
+
+
+
+<!-- SETTINGS -->
+<div id="settings" class="tab hidden">
+  <div class="settings-container">
+    <h2>Settings</h2>
+    <button class="reset-btn" onclick="resetData()">🔄 Reset Dashboard Data</button>
+    <p>All demo employees, applications, and meetings will be reloaded.</p>
+  </div>
+</div>
+
+
+
+  <!-- RESUME MODAL (Employees + Applicants) -->
+<div id="resumeModal" class="resume-modal hidden">
+  <div class="resume-content">
+    <div class="profile-header">
+      <img id="resumeAvatar" src="assets/user_icon.png" class="resume-avatar">
+      <div>
+        <h3 id="resumeName"></h3>
+        <p id="resumeDept"></p>
+      </div>
+    </div>
+
+    <div class="resume-body">
+      <p><b>Gender:</b> <span id="resumeGender"></span></p>
+      <p><b>Email:</b> <span id="resumeEmail"></span></p>
+      <p><b>Monthly Income / Expected Salary:</b> ₹<span id="resumeIncome"></span></p>
+      <p><b>Years at Company:</b> <span id="resumeYears"></span></p>
+      <p><b>Job Satisfaction:</b> <span id="resumeSatisfaction"></span>/5</p>
+      <p><b>Attrition:</b> <span id="resumeAttrition"></span></p>
+
+      <div id="resumeSkills" class="skills"></div>
+
+      <div class="performance">
+        <b>Performance / Profile Strength:</b>
+        <div class="progress-bar">
+          <div id="resumeProgress" class="progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-footer">
+      <button id="resumeDownloadBtn">⬇ Download Resume</button>
+      <button onclick="closeResume()">❌ Close</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Notification Panel -->
+  <div id="notificationPanel" class="hidden panel"></div>
+
+  <script src="dashboard.js"></script>
+
+</body>
+</html>
